@@ -1,5 +1,7 @@
 import express from 'express';
 import pg from 'pg';
+import { crearCasosDeUso } from './aplicacion.js';
+import { crearRepositorioPostgres } from './postgres.js';
 import { rutasClientes } from './clientes.js';
 import { rutasConversaciones } from './conversaciones.js';
 
@@ -17,16 +19,13 @@ pool.on('error', (error) => {
   console.error('Conexión inactiva de PostgreSQL:', error.code ?? error.name);
 });
 
+const aplicacion = crearCasosDeUso(crearRepositorioPostgres(pool));
 const app = express();
 app.use(express.json({ limit: '16kb' }));
 
 app.get('/api/estado', async (_req, res) => {
   try {
-    await pool.query(`
-      SELECT 1 FROM clientes LIMIT 0;
-      SELECT 1 FROM conversaciones LIMIT 0;
-      SELECT 1 FROM mensajes LIMIT 0;
-    `);
+    await aplicacion.comprobarEstado();
     res.json({ estado: 'ok', base_de_datos: 'disponible' });
   } catch (error) {
     console.error('Consulta de estado:', error.code ?? error.name);
@@ -34,8 +33,8 @@ app.get('/api/estado', async (_req, res) => {
   }
 });
 
-app.use('/api/clientes', rutasClientes(pool));
-app.use('/api/conversaciones', rutasConversaciones(pool));
+app.use('/api/clientes', rutasClientes(aplicacion));
+app.use('/api/conversaciones', rutasConversaciones(aplicacion));
 app.use((_req, res) => res.status(404).json({ error: 'Ruta inexistente' }));
 
 app.use((error, _req, res, _next) => {

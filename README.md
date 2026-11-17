@@ -2,6 +2,12 @@
 
 # Prototipo de Clientes y Conversaciones para el ERP de ventas por WhatsApp. 
 
+## Arquitectura
+
+Las rutas de [Clientes](src/clientes.js) y [Conversaciones](src/conversaciones.js) reciben peticiones de Express y llaman a los [casos de uso](src/aplicacion.js). Ahí se valida la recepción simulada y se consulta el historial. La aplicación define las operaciones que necesita de la persistencia, de modo que se puede probar con un repositorio en memoria.
+
+El [adaptador PostgreSQL](src/postgres.js) implementa esas operaciones y registra cada recepción en una sola sentencia SQL. [El arranque](src/server.js) conecta Express, los casos de uso y el adaptador. El servicio se ejecuta como un solo proceso.
+
 ## Requisitos
 
 - Node.js 22 o posterior y npm.

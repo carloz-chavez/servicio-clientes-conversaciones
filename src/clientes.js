@@ -1,13 +1,10 @@
 import { Router } from 'express';
 
-export function rutasClientes(pool) {
+export function rutasClientes(aplicacion) {
   const router = Router();
 
   router.get('/', async (_req, res) => {
-    const { rows } = await pool.query(
-      'SELECT id, telefono, creado_en FROM clientes ORDER BY id',
-    );
-    res.json(rows);
+    res.json(await aplicacion.listarClientes());
   });
 
   return router;
