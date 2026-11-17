@@ -1,6 +1,6 @@
-# PC3 · Módulo 4 CHAVEZ
 
-Prototipo local de Clientes y Conversaciones para el ERP de ventas por WhatsApp. Una petición HTTP con datos ficticios simula la recepción de un mensaje entrante.
+
+# Prototipo de Clientes y Conversaciones para el ERP de ventas por WhatsApp. 
 
 ## Requisitos
 
